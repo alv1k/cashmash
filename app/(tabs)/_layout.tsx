@@ -30,6 +30,34 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="finance"
+        options={{
+          title: 'Finance',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="money.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="maintainance"
+        options={{
+          title: 'Maintainance',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="maintainance.icon.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="reciepts"
+        options={{
+          title: 'Reciepts',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="reciepts.icon.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="account.page.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
