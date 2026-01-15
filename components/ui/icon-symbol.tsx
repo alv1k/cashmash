@@ -20,6 +20,17 @@ const MAPPING = {
   'maintainance.icon.fill': 'electric-car',
   'reciepts.icon.fill': 'food-bank',
   'account.page.fill': 'person-outline',
+  // Tab navigation icons
+  'square.grid.2x2.fill': 'dashboard',
+  'clock.arrow.circlepath': 'history',
+  'arrow.up.arrow.down': 'swap-horiz',
+  'creditcard.fill': 'credit-card',
+  'person.crop.circle.fill': 'person',
+  'gearshape.fill': 'settings',
+  'chart.bar.fill': 'bar-chart',
+  'ellipsis.circle.fill': 'more-horiz',
+  'receipt.fill': 'receipt',
+  'account.balance.wallet.fill': 'account-balance-wallet',
 } as const;
 
 type IconSymbolName = keyof typeof MAPPING;

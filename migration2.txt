@@ -1,0 +1,175 @@
+Шаги для связи фронтенда с API и написания бэкенда на VPS:
+
+1. Создайте структуру бэкенда:
+   A. Создайте папку на VPS:
+      mkdir ~/cashmash-backend
+      cd ~/cashmash-backend
+
+   B. Инициализируйте Node.js проект:
+      npm init -y
+      npm install express @types/express cors @types/cors dotenv
+      npm install -D typescript ts-node nodemon
+
+   C. Создайте tsconfig.json:
+      {
+        "compilerOptions": {
+          "target": "ES2020",
+          "module": "commonjs",
+          "strict": true,
+          "esModuleInterop": true,
+          "skipLibCheck": true,
+          "forceConsistentCasingInFileNames": true,
+          "outDir": "./dist",
+          "rootDir": "./src"
+        },
+        "include": ["src/**/*"],
+        "exclude": ["node_modules"]
+      }
+
+2. Настройте Prisma:
+   A. Установите Prisma:
+      npm install prisma @prisma/client
+      npx prisma init
+
+   B. Обновите .env:
+      DATABASE_URL="mysql://prisma_user:password@localhost:3306/cashmash_db"
+      PORT=3000
+      JWT_SECRET=your_jwt_secret
+
+   C. Определите модели в prisma/schema.prisma:
+      generator client {
+        provider = "prisma-client-js"
+      }
+
+      datasource db {
+        provider = "mysql"
+        url      = env("DATABASE_URL")
+      }
+
+      model User {
+        id    Int     @id @default(autoincrement())
+        email String  @unique
+        name  String?
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+      }
+
+   D. Примените миграции:
+      npx prisma migrate dev --name init
+
+3. Напишите бэкенд (Express + Prisma):
+   A. Создайте src/server.ts:
+      import express from 'express';
+      import cors from 'cors';
+      import { PrismaClient } from '@prisma/client';
+
+      const prisma = new PrismaClient();
+      const app = express();
+
+      app.use(express.json());
+      app.use(cors());
+
+      // Маршрут для получения всех пользователей
+      app.get('/api/users', async (req, res) => {
+        try {
+          const users = await prisma.user.findMany();
+          res.json(users);
+        } catch (error) {
+          res.status(500).json({ error: 'Failed to fetch users' });
+        }
+      });
+
+      // Маршрут для создания пользователя
+      app.post('/api/users', async (req, res) => {
+        try {
+          const { email, name } = req.body;
+          const user = await prisma.user.create({
+            data: { email, name },
+          });
+          res.json(user);
+        } catch (error) {
+          res.status(500).json({ error: 'Failed to create user' });
+        }
+      });
+
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+
+   B. Сгенерируйте Prisma клиент:
+      npx prisma generate
+
+4. Запустите бэкенд через PM2:
+   A. Создайте ecosystem.config.js:
+      module.exports = {
+        apps: [
+          {
+            name: 'cashmash-api',
+            script: './dist/server.js',
+            instances: 'max',
+            exec_mode: 'cluster',
+            env: {
+              NODE_ENV: 'development',
+              PORT: 3000,
+            },
+            env_production: {
+              NODE_ENV: 'production',
+              PORT: 3000,
+            },
+          },
+        ],
+      };
+
+   B. Скомпилируйте и запустите:
+      npx tsc
+      pm2 start ecosystem.config.js --env production
+      pm2 startup
+      pm2 save
+
+5. Настройте nginx как reverse proxy:
+   A. Создайте /etc/nginx/sites-available/cashmash-api:
+      server {
+          listen 80;
+          server_name your-vps-ip-or-domain.com;
+
+          location / {
+              proxy_pass http://localhost:3000;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+          }
+      }
+
+   B. Активируйте сайт:
+      sudo ln -s /etc/nginx/sites-available/cashmash-api /etc/nginx/sites-enabled/
+      sudo nginx -t
+      sudo systemctl reload nginx
+
+6. Свяжите фронтенд с API:
+   A. В локальном проекте cashmash обновите .env:
+      REACT_APP_API_URL=http://your-vps-ip-or-domain.com
+
+   B. Пример запроса в фронтенде:
+      useEffect(() => {
+        fetch(`${process.env.REACT_APP_API_URL}/api/users`)
+          .then(response => response.json())
+          .then(data => console.log(data));
+      }, []);
+
+7. Проверьте соединение:
+   A. Тест API:
+      curl http://your-vps-ip-or-domain.com/api/users
+
+   B. Тест создания пользователя:
+      curl -X POST http://your-vps-ip-or-domain.com/api/users \
+        -H "Content-Type: application/json" \
+        -d '{"email":"test@example.com","name":"Test User"}'
+
+8. Дополнительные функции:
+   - Добавьте JWT-аутентификацию
+   - Реализуйте остальные CRUD-операции
+   - Настройте SSL через Let's Encrypt
+   - Добавьте логирование (winston)
+   - Напишите тесты (Jest)

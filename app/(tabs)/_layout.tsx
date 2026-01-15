@@ -17,45 +17,38 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
       }}>
       <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="finance"
         options={{
           title: 'Finance',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="money.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="creditcard.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="maintainance"
+        name="budget"
         options={{
-          title: 'Maintainance',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="maintainance.icon.fill" color={color} />,
+          title: 'Budget',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="square.grid.2x2.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="reciepts"
-        options={{
-          title: 'Reciepts',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="reciepts.icon.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="account"
+        name="index"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="account.page.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.crop.circle.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="analytics"
+        options={{
+          title: 'Analytics',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="tobuylist"
+        options={{
+          title: 'Tobuylist',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="account.balance.wallet.fill" color={color} />,
         }}
       />
     </Tabs>

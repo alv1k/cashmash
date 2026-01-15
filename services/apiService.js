@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Base URL for the API - update this to your VPS server URL when deploying
-const API_BASE_URL = 'http://localhost:3000/api'; // Change this to your VPS IP when deploying
+const API_BASE_URL = `${process.env.REACT_APP_API_URL}/api`; // Change this to your VPS IP when deploying
 
 class ApiService {
   constructor() {

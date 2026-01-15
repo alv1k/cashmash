@@ -38,7 +38,7 @@ export default function HomeScreen() {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <Link href={"/(tabs)/finance"}>
-          <ThemedText type="subtitle">Maintainance page</ThemedText>
+          <ThemedText type="subtitle">budget page</ThemedText>
         </Link>
         {/* <Link href="/modal">
           <Link.Trigger>
